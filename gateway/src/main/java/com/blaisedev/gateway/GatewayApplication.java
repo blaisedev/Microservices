@@ -10,14 +10,17 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableDiscoveryClient
 public class GatewayApplication {
 
 	@Bean
 	public RouteLocator myRouteLocator(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route("movie-info-service", r -> r.path("/**")
+				.route("movie-info-service", r -> r.path("/rest/**").or().path("/movies/**")
 						.uri("lb://movie-info-service"))
+				.route("movie-catalog-service", r -> r.path("/catalog/**")
+						.uri("lb://movie-catalog-service"))
+				.route("ratings-data-service", r -> r.path("/ratingsdata/**")
+						.uri("lb://ratings-data-service"))
 				.build();
 	}
 
